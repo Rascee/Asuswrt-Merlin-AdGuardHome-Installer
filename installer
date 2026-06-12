@@ -1259,14 +1259,6 @@ download_file() {
 				if http_get_file "${URL}.md5sum" "${TMP_MD5}" "" insecure && [ -s "${TMP_MD5}" ]; then
 					MD5SUM_EXPECTED="$(awk 'NR == 1 {print $1; exit}' "${TMP_MD5}")"
 				fi
-				if md5_is_valid "${MD5SUM_EXPECTED}"; then
-					if [ "${MD5SUM_CURR}" = "${MD5SUM_EXPECTED}" ]; then
-						break
-					fi
-					PTXT "${WARNING} Checksum mismatch for ${FILENAME}; retrying download."
-				else
-					break
-				fi
 			fi
 			COUNT="$((COUNT + 1))"
 		done
