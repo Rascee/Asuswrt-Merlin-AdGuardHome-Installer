@@ -1253,6 +1253,7 @@ download_file() {
 		while [ "${COUNT}" -lt 3 ]; do
 			PTXT "${INFO} Downloading ${FILENAME}"
 			rm -f "${TMP_FILE}" "${TMP_MD5}"
+			PTXT "trying ${URL}" "${TMP_FILE}"
 			if http_get_file "${URL}" "${TMP_FILE}" "" insecure && [ -s "${TMP_FILE}" ]; then
 				MD5SUM_CURR="$(md5sum "${TMP_FILE}" | awk '{print $1; exit}')"
 				MD5SUM_EXPECTED=""
