@@ -1331,14 +1331,18 @@ IPSet_Start_While_Locked() {
 }
 
 IPSet_Lock() {
+	logger -st "${NAME}" "ipset lock 1"
 	local STATUS
 	IPSet_Runtime_Prepare || return 1
 	if have_cmd flock && flock_supports_fd; then
+		logger -st "${NAME}" "ipset lock 2"
 		IPSet_Lock_Flock "$@"
 	else
+		logger -st "${NAME}" "ipset lock 3"
 		IPSet_Lock_Mkdir "$@"
 	fi
 	STATUS="$?"
+	logger -st "${NAME}" "ipset lock 4: ${STATUS}"
 	IPSet_Dnsmasq_Restart_After_Unlock
 	return "${STATUS}"
 }
@@ -1808,8 +1812,10 @@ IPSet_Restore_Traps() {
 }
 
 IPSet_Runtime_Prepare() {
+	logger -st "${NAME}" "ipset runtime prepare 1"
 	local MODE OWNER
 	OWNER="$(id -u)" || return 1
+	logger -st "${NAME}" "ipset runtime prepare 2 ${OWNER}"
 	if ! mkdir -m 700 "${IPSET_RUNTIME_DIR}" 2>/dev/null; then
 		if [ -L "${IPSET_RUNTIME_DIR}" ] || [ ! -d "${IPSET_RUNTIME_DIR}" ]; then
 			logger -st "${NAME}" "Unsafe IPSET runtime path: ${IPSET_RUNTIME_DIR}"
@@ -1835,10 +1841,12 @@ IPSet_Setup() {
 
 IPSet_Setup_For_Start() {
 	if ! IPSet_Supported; then
+		logger -st "${NAME}" "ipset setup for start 1"
 		[ "${IPSET_LEGACY_VERSION:-}" = "1" ] || return 0
 		IPSet_Lock IPSet_Disable_Managed_For_Start_Locked
 		return $?
 	fi
+	logger -st "${NAME}" "ipset setup for start 2"
 	IPSET_REFRESH_CONFIG=""
 	IPSet_Lock IPSet_Setup_For_Start_Locked
 }
@@ -1908,6 +1916,7 @@ IPSet_Setup_Locked() {
 }
 
 IPSet_Supported() {
+	logger -st "${NAME}" "ipset support 1"
 	local VERSION_CLASS VERSION_OUTPUT
 	IPSET_LEGACY_VERSION=""
 	if [ ! -x "${ADGUARDHOME_BINARY}" ]; then
@@ -1918,6 +1927,7 @@ IPSet_Supported() {
 		logger -st "${NAME}" "Skipping managed IPSET integration; unable to query the AdGuardHome version."
 		return 1
 	}
+	logger -st "${NAME}" "ipset support 2"
 	VERSION_CLASS="$(printf '%s\n' "${VERSION_OUTPUT}" | awk '
 		{
 			for (i = 1; i <= NF; i++) {
@@ -1934,11 +1944,14 @@ IPSet_Supported() {
 			}
 		}
 	')"
+	logger -st "${NAME}" "ipset support 3"
 	case "${VERSION_CLASS}" in
 		supported)
+			logger -st "${NAME}" "ipset support 4"
 			return 0
 			;;
 		legacy)
+			logger -st "${NAME}" "ipset support 5"
 			IPSET_LEGACY_VERSION="1"
 			logger -st "${NAME}" "Skipping managed IPSET integration; AdGuardHome v0.107.48 or later is required."
 			return 1
