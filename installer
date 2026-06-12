@@ -1255,6 +1255,7 @@ download_file() {
 			rm -f "${TMP_FILE}" "${TMP_MD5}"
 			PTXT "trying ${URL}" "${TMP_FILE}"
 			if http_get_file "${URL}" "${TMP_FILE}" "" insecure && [ -s "${TMP_FILE}" ]; then
+				PTXT "success getting 1"
 				MD5SUM_CURR="$(md5sum "${TMP_FILE}" | awk '{print $1; exit}')"
 				MD5SUM_EXPECTED=""
 				if http_get_file "${URL}.md5sum" "${TMP_MD5}" "" insecure && [ -s "${TMP_MD5}" ]; then
