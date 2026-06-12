@@ -1260,7 +1260,9 @@ download_file() {
 				MD5SUM_CURR="$(md5sum "${TMP_FILE}" | awk '{print $1; exit}')"
 				MD5SUM_EXPECTED=""
 				if http_get_file "${URL}.md5sum" "${TMP_MD5}" "" insecure && [ -s "${TMP_MD5}" ]; then
+					PTXT "success getting 2"
 					MD5SUM_EXPECTED="$(awk 'NR == 1 {print $1; exit}' "${TMP_MD5}")"
+					PTXT "done"
 				fi
 			fi
 			COUNT="$((COUNT + 1))"
