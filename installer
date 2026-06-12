@@ -1263,6 +1263,8 @@ download_file() {
 					MD5SUM_EXPECTED="$(awk 'NR == 1 {print $1; exit}' "${TMP_MD5}")"
 				fi
 				if md5_is_valid "${MD5SUM_EXPECTED}"; then
+					PTXT "MD5SUM_CURR - ${MD5SUM_CURR}"
+					PTXT "MD5SUM_EXPECTED - ${MD5SUM_EXPECTED}"
 					if [ "${MD5SUM_CURR}" = "${MD5SUM_EXPECTED}" ]; then
 						break
 					fi
