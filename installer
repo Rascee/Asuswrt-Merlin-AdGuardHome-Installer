@@ -1260,13 +1260,18 @@ download_file() {
 				MD5SUM_CURR="$(md5sum "${TMP_FILE}" | awk '{print $1; exit}')"
 				MD5SUM_EXPECTED=""
 				if http_get_file "${URL}.md5sum" "${TMP_MD5}" "" insecure && [ -s "${TMP_MD5}" ]; then
-					PTXT "success getting 2"
 					MD5SUM_EXPECTED="$(awk 'NR == 1 {print $1; exit}' "${TMP_MD5}")"
-					PTXT "done"
+				fi
+				if md5_is_valid "${MD5SUM_EXPECTED}"; then
+					if [ "${MD5SUM_CURR}" = "${MD5SUM_EXPECTED}" ]; then
+						break
+					fi
+					PTXT "${WARNING} Checksum mismatch for ${FILENAME}; retrying download."
+				else
 					break
 				fi
 			fi
-		COUNT="$((COUNT + 1))"
+			COUNT="$((COUNT + 1))"
 		done
 		rm -f "${TMP_MD5}"
 		if [ "${COUNT}" -eq 3 ]; then
