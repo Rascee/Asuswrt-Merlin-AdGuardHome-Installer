@@ -1266,6 +1266,7 @@ download_file() {
 					break
 				fi
 			fi
+		COUNT="$((COUNT + 1))"
 		done
 		rm -f "${TMP_MD5}"
 		if [ "${COUNT}" -eq 3 ]; then
