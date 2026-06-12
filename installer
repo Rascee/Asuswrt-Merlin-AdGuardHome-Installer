@@ -1263,6 +1263,7 @@ download_file() {
 					PTXT "success getting 2"
 					MD5SUM_EXPECTED="$(awk 'NR == 1 {print $1; exit}' "${TMP_MD5}")"
 					PTXT "done"
+					break
 				fi
 			fi
 		done
