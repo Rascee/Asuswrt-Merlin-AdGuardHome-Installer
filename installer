@@ -188,6 +188,7 @@ http_get_file() {
 	if ai_have_cmd curl; then
 		CURL_ARGS="$(curl_common_args)"
 		[ "${INSECURE}" = "insecure" ] && CURL_ARGS="${CURL_ARGS}$(curl_insecure_arg)"
+		PTXT "curl ${CURL_ARGS} -D "${HEADERS}" -f -sL "${URL}" -o "${OUT}""
 		if [ -n "${HEADERS}" ]; then
 			curl ${CURL_ARGS} -D "${HEADERS}" -f -sL "${URL}" -o "${OUT}"
 		else
