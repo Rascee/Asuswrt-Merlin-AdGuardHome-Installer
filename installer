@@ -977,11 +977,6 @@ check_version() {
 						if http_get_file "${RURL}/installer.md5sum" "${REMOTE_INSTALLER_MD5}" && [ -s "${REMOTE_INSTALLER_MD5}" ]; then
 							MD5SUM_EXPECTED="$(awk 'NR == 1 {print $1; exit}' "${REMOTE_INSTALLER_MD5}")"
 						fi
-						if md5_is_valid "${MD5SUM_EXPECTED}" && [ "${MD5SUM_R}" != "${MD5SUM_EXPECTED}" ]; then
-							PTXT "${WARNING} Remote installer checksum mismatch; retrying version check."
-							RMNSTALL=""
-							MD5SUM_R=""
-						fi
 					fi
 				fi
 				[ -n "${LINSTALL}" ] && [ -n "${RMNSTALL}" ] && [ -n "${MD5SUM_L}" ] && [ -n "${MD5SUM_R}" ] && break
